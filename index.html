@@ -1,1 +1,209 @@
 
+
+<!DOCTYPE html>
+<html lang="so">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CABSHIA | Film</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(145deg,#100d19,#211333,#100d19);
+  font-family: Arial, sans-serif;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 420px;
+  background: #1c1727;
+  border: 1px solid #65418b;
+  border-radius: 25px;
+  padding: 30px 23px;
+  text-align: center;
+  box-shadow: 0 0 35px #8b45c533;
+  animation: appear 1s ease;
+}
+
+.logo {
+  color: #c99aff;
+  font-size: 15px;
+  letter-spacing: 5px;
+  margin-bottom: 35px;
+}
+
+h1 {
+  font-size: 30px;
+  margin-bottom: 12px;
+}
+
+p {
+  color: #c5b9d5;
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+input {
+  width: 100%;
+  padding: 16px;
+  margin: 25px 0 15px;
+  border: 1px solid #8056a7;
+  background: #292136;
+  border-radius: 12px;
+  color: white;
+  outline: none;
+  font-size: 15px;
+  text-align: center;
+}
+
+input::placeholder {
+  color: #a99ab9;
+}
+
+button {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(90deg,#8544b8,#bd78ef);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .3s;
+}
+
+button:active {
+  transform: scale(.96);
+}
+
+#result {
+  display: none;
+  animation: appear 1s ease;
+}
+
+.emojis {
+  font-size: 55px;
+  margin-bottom: 20px;
+  animation: laugh .6s infinite alternate;
+}
+
+.result-title {
+  color: #d9a8ff;
+  font-size: 29px;
+  margin-bottom: 15px;
+}
+
+.heart {
+  margin-top: 25px;
+  color: #c99aff;
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+
+@keyframes appear {
+  from {opacity:0; transform:translateY(20px);}
+  to {opacity:1; transform:translateY(0);}
+}
+
+@keyframes laugh {
+  from {transform:rotate(-7deg);}
+  to {transform:rotate(7deg);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div id="welcome">
+
+    <div class="logo">CABSHIA ✦ FILM</div>
+
+    <h1>Ku soo dhowow! 🎬</h1>
+
+    <p>
+      Ku soo dhowow filimka CABSHIA ❤️
+      <br>
+      Kahor intaadan bilaabin,
+      fadlan wax yar halkan ku qor.
+    </p>
+
+    <input
+      type="text"
+      id="message"
+      placeholder="Qoraalkaaga halkan ku qor..."
+      required
+    >
+
+    <button onclick="submitMessage()">
+      SUBMIT ✨
+    </button>
+
+    <div class="heart">
+      CABSHIA • A SPECIAL STORY
+    </div>
+
+  </div>
+
+  <div id="result">
+
+    <div class="emojis">😂🤣😂</div>
+
+    <h2 class="result-title">
+      Hahahaha!
+    </h2>
+
+    <p style="font-size:19px;color:white;">
+      Waa lagu khiyaamay! 🤣
+    </p>
+
+    <p style="margin-top:20px;">
+      Waxba hadda laguma hayo! 😂
+      <br><br>
+      Tani waa prank ku saabsan filimka CABSHIA.
+      <br>
+      Mar labaad ha xanaaqin! ❤️😂
+    </p>
+
+    <div class="heart">
+      MADE WITH A LITTLE HUMOUR ✨
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function submitMessage() {
+
+  const message = document.getElementById("message").value.trim();
+
+  if (message === "") {
+    alert("Marka hore wax yar qor 😂");
+    return;
+  }
+
+  document.getElementById("welcome").style.display = "none";
+
+  document.getElementById("result").style.display = "block";
+
+  window.scrollTo(0,0);
+}
+</script>
+
+</body>
+</html>
