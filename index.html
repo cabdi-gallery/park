@@ -2,144 +2,19 @@
 <html lang="so">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>Dagaalka Tuurista</title>
-<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Error</title>
 <style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;min-height:100vh;font-family:system-ui,sans-serif;color:#fff;background:linear-gradient(160deg,#0b1030,#3b1c6e 60%,#c2185b);display:flex;justify-content:center}
-#app{width:100%;max-width:440px;padding:20px;display:flex;flex-direction:column;gap:14px}
-h1{text-align:center;margin:10px 0 0;font-size:28px}
-p.sub{text-align:center;margin:0;opacity:.8}
-input,button{font:inherit;border-radius:14px;border:0;padding:14px}
-input{width:100%;background:#ffffff22;color:#fff;text-align:center}
-input::placeholder{color:#ffffff99}
-button{background:#ff9800;color:#fff;font-weight:700;cursor:pointer}
-button.alt{background:#ffffff26}
-.hide{display:none!important}
-.card{background:#ffffff18;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px}
-.code{font-size:56px;letter-spacing:8px;text-align:center;font-weight:800}
-.scores{display:flex;gap:10px}
-.sc{flex:1;background:#ffffff1f;border-radius:16px;padding:12px;text-align:center}
-.sc b{display:block;font-size:40px}
-#timer{text-align:center;font-size:44px;font-weight:800;min-height:56px}
-#tap{height:170px;font-size:34px;border-radius:50%;width:170px;align-self:center;background:radial-gradient(#ffca28,#ff6f00);box-shadow:0 8px 30px #0006}
-#tap:active{transform:scale(.94)}
-#msgs{height:120px;overflow-y:auto;background:#0003;border-radius:12px;padding:8px;font-size:14px}
-#msgs div{margin:3px 0}
-.row{display:flex;gap:8px}.row input{text-align:left}
-#status{text-align:center;opacity:.85}
+html,body{height:100%;margin:0}
+body{background:#0b0b0f;color:#fff;font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
+h1{color:#ff3b3b;font-size:56px;margin:0 0 16px;letter-spacing:2px}
+p{font-size:20px;line-height:1.5;margin:0;max-width:420px;opacity:.9}
 </style>
 </head>
 <body>
-<div id="app">
-  <h1>⚡ Dagaalka Tuurista</h1>
-
-  <div id="home" class="card">
-    <input id="name" placeholder="Magacaaga" maxlength="14">
-    <button id="create">Abuur Ciyaar</button>
-    <p class="sub">ama gal saaxiibkaa</p>
-    <input id="joinCode" placeholder="Koodka (4 lambar)" inputmode="numeric" maxlength="4">
-    <button class="alt" id="join">Gal Ciyaarta</button>
-  </div>
-
-  <div id="lobby" class="card hide">
-    <p class="sub">Koodkaaga u sheeg saaxiibkaa:</p>
-    <div class="code" id="codeShow">----</div>
-    <p id="lobbyMsg" class="sub">Waxaan sugayaa saaxiibkaa…</p>
-  </div>
-
-  <div id="game" class="hide">
-    <div class="scores">
-      <div class="sc"><span id="n1">Adiga</span><b id="s1">0</b></div>
-      <div class="sc"><span id="n2">Saaxiibka</span><b id="s2">0</b></div>
-    </div>
-    <div id="timer"></div>
-    <button id="tap" disabled>TUUR!</button>
-    <div id="status"></div>
-    <button id="again" class="hide">Mar kale ciyaar</button>
-  </div>
-
-  <div id="chat" class="card hide">
-    <div id="msgs"></div>
-    <div class="row"><input id="msg" placeholder="Fariin qor…" maxlength="120"><button id="send">➤</button></div>
-  </div>
+<div>
+<h1>Error</h1>
+<p>wakhtiga aya ka dhacay game saxibtinmo ka rali ahow, mar danbe dib u cusbonaysi</p>
 </div>
-
-<script>
-const $ = id => document.getElementById(id);
-let peer, conn, isHost = false, myName = "Aniga", oppName = "Saaxiibka";
-let running = false, myTaps = 0, oppTaps = 0, myFinal = null, oppFinal = null, tapTimer;
-const PREFIX = "tapbattle-so-";
-
-function show(...ids){["home","lobby","game","chat"].forEach(i=>$(i).classList.add("hide"));ids.forEach(i=>$(i).classList.remove("hide"));}
-function addMsg(who,text){const d=document.createElement("div");const b=document.createElement("b");b.textContent=who+": ";d.appendChild(b);d.appendChild(document.createTextNode(text));$("msgs").appendChild(d);$("msgs").scrollTop=1e9;}
-function send(o){if(conn&&conn.open)conn.send(o);}
-
-function setup(c){
-  conn = c;
-  c.on("open",()=>{ send({t:"hello",name:myName}); });
-  c.on("data",onData);
-  c.on("close",()=>{ $("status").textContent="Saaxiibkaa wuu baxay."; running=false; $("tap").disabled=true; addMsg("•","Isku xirka waa go'ay"); });
-}
-function onData(m){
-  if(m.t==="hello"){
-    oppName=String(m.name||"Saaxiibka").slice(0,14); $("n2").textContent=oppName; $("n1").textContent=myName;
-    show("game","chat"); $("status").textContent = isHost ? "Diyaar? Riix bilow." : "Sug martigeliyaha…";
-    if(isHost){$("again").textContent="Bilow ciyaarta";$("again").classList.remove("hide");}
-  }
-  if(m.t==="chat") addMsg(oppName,String(m.text).slice(0,120));
-  if(m.t==="start") startRound();
-  if(m.t==="tap"){oppTaps=Number(m.n)||0;$("s2").textContent=oppTaps;}
-  if(m.t==="final"){oppFinal=Number(m.n)||0;oppTaps=oppFinal;$("s2").textContent=oppFinal;maybeEnd();}
-}
-
-$("create").onclick=()=>{
-  myName=($("name").value.trim()||"Martigeliye").slice(0,14); isHost=true;
-  const code=String(Math.floor(1000+Math.random()*9000));
-  peer=new Peer(PREFIX+code);
-  peer.on("open",()=>{$("codeShow").textContent=code;show("lobby");});
-  peer.on("error",e=>{ if(e.type==="unavailable-id")$("create").click(); else alert("Khalad: "+e.type); });
-  peer.on("connection",c=>{ if(conn&&conn.open){c.close();return;} setup(c); });
-};
-$("join").onclick=()=>{
-  const code=$("joinCode").value.trim(); if(code.length!==4){alert("Qor koodka 4-ta lambar");return;}
-  myName=($("name").value.trim()||"Saaxiib").slice(0,14); isHost=false;
-  peer=new Peer();
-  peer.on("open",()=>{ const c=peer.connect(PREFIX+code,{reliable:true}); setup(c); setTimeout(()=>{ if(!c.open)alert("Qolkan lama helin. Hubi koodka."); },8000); });
-  peer.on("error",e=>{ alert(e.type==="peer-unavailable"?"Koodkaas ma jiro.":"Khalad: "+e.type); });
-};
-
-$("again").onclick=()=>{ if(!isHost)return; send({t:"start"}); startRound(); };
-
-function startRound(){
-  myTaps=oppTaps=0;myFinal=oppFinal=null;$("s1").textContent=0;$("s2").textContent=0;
-  $("again").classList.add("hide");$("status").textContent="";
-  let c=3;$("timer").textContent=c;
-  const iv=setInterval(()=>{c--; if(c>0){$("timer").textContent=c;return;}
-    clearInterval(iv); running=true;$("tap").disabled=false;
-    const end=Date.now()+10000;
-    tapTimer=setInterval(()=>{
-      const left=Math.max(0,end-Date.now()); $("timer").textContent=(left/1000).toFixed(1);
-      send({t:"tap",n:myTaps});
-      if(left<=0){clearInterval(tapTimer);running=false;$("tap").disabled=true;myFinal=myTaps;send({t:"final",n:myFinal});$("status").textContent="Sugaya natiijada…";maybeEnd();setTimeout(()=>{if(oppFinal===null){oppFinal=oppTaps;maybeEnd();}},3000);}
-    },100);
-  },1000);
-}
-$("tap").addEventListener("pointerdown",e=>{e.preventDefault();if(!running)return;myTaps++;$("s1").textContent=myTaps;});
-
-function maybeEnd(){
-  if(myFinal===null||oppFinal===null)return;
-  $("timer").textContent="🏁";
-  $("status").textContent = myFinal>oppFinal?"🎉 Waad guuleysatay!":myFinal<oppFinal?"😅 "+oppName+" ayaa guuleystay":"🤝 Barbaro!";
-  $("again").textContent=isHost?"Mar kale ciyaar":"Sug martigeliyaha…";
-  if(isHost)$("again").classList.remove("hide");
-  myFinal=null;
-}
-
-function sendMsg(){const t=$("msg").value.trim();if(!t||!conn||!conn.open)return;send({t:"chat",text:t});addMsg("Adiga",t);$("msg").value="";}
-$("send").onclick=sendMsg;
-$("msg").addEventListener("keydown",e=>{if(e.key==="Enter")sendMsg();});
-</script>
 </body>
 </html>
